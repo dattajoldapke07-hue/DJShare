@@ -6,7 +6,8 @@ import threading
 from io import BytesIO
 from flask import (
     Flask, request, jsonify,
-    send_file, abort, render_template_string
+    send_file, abort, render_template_string,
+    send_from_directory
 )
 from werkzeug.utils import secure_filename
 

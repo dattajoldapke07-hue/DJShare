@@ -83,7 +83,10 @@ def make_code():
 
 @app.get("/")
 def home():
-    return render_template_string(PAGE)
+    return send_from_directory(
+        os.path.dirname(os.path.abspath(__file__)),
+        "index.html"
+    )
 
 @app.get("/health")
 def health():

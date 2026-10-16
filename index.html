@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJShare | Secure File Transfer</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #050807;
+    color: #00ff88;
+    font-family: monospace;
+    min-height: 100vh;
+}
+
+header {
+    padding: 22px 15px;
+    text-align: center;
+    border-bottom: 1px solid #00ff8855;
+    box-shadow: 0 0 20px #00ff8815;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px #00ff88;
+}
+
+.subtitle {
+    color: #8aaca0;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+main {
+    width: 92%;
+    max-width: 500px;
+    margin: 35px auto;
+}
+
+.panel {
+    border: 1px solid #00ff8860;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    background: #09110e;
+    box-shadow: 0 0 20px #00ff880b;
+}
+
+h2 {
+    font-size: 17px;
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 12px;
+    color: #a4c9b7;
+}
+
+input[type="file"],
+input[type="text"] {
+    width: 100%;
+    padding: 13px;
+    background: #030605;
+    border: 1px solid #245c43;
+    border-radius: 6px;
+    color: #00ff88;
+    margin-bottom: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #00ff88;
+    color: #001b0e;
+    font-weight: bold;
+    font-family: monospace;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+button:hover {
+    box-shadow: 0 0 18px #00ff8870;
+}
+
+.secondary {
+    background: transparent;
+    color: #00ff88;
+    border: 1px solid #00ff88;
+}
+
+.status {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #a4c9b7;
+    overflow-wrap: anywhere;
+    line-height: 1.8;
+}
+
+.code {
+    font-size: 32px;
+    text-align: center;
+    letter-spacing: 5px;
+    padding: 18px 0;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 15px #00ff88;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 10px;
+    color: #527463;
+    font-size: 11px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">DJ<span style="color:white">SHARE</span></div>
+    <div class="subtitle">SECURE FILE TRANSFER // NEXT GENERATION</div>
+</header>
+
+<main>
+
+    <section class="panel">
+        <h2>&gt; SEND FILES</h2>
+
+        <label for="files">SELECT FILES TO TRANSFER</label>
+        <input type="file" id="files" multiple>
+
+        <button onclick="prepareFiles()">INITIALIZE SEND</button>
+        <button class="secondary" onclick="cancelTransfer()">CANCEL</button>
+
+        <div id="sendStatus" class="status">
+            &gt; SYSTEM READY<br>
+            &gt; WAITING FOR FILE SELECTION
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>&gt; RECEIVE FILES</h2>
+
+        <label for="shareCode">ENTER YOUR DJSHARE CODE</label>
+        <input type="text" id="shareCode" placeholder="Example: DJ729"
+               maxlength="5" autocomplete="off">
+
+        <button onclick="openTransfer()">CONNECT</button>
+
+        <div id="receiveStatus" class="status">
+            &gt; WAITING FOR CONNECTION CODE
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>&gt; CONNECTION STATUS</h2>
+        <div class="status" id="systemStatus">
+            &gt; DJSHARE INITIALIZED<br>
+            &gt; TRANSFER SERVER NOT CONNECTED<br>
+            &gt; READY FOR SETUP
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    DJSHARE // SHARE ANYTHING. ANYWHERE.
+</footer>
+
+<script>
+let selectedFiles = [];
+
+function prepareFiles() {
+    const input = document.getElementById("files");
+    const status = document.getElementById("sendStatus");
+
+    if (!input.files.length) {
+        status.textContent = "> ERROR: SELECT FILES FIRST";
+        return;
+    }
+
+    selectedFiles = Array.from(input.files);
+
+    status.textContent =
+        "> FILES SELECTED: " + selectedFiles.length +
+        "\n> TOTAL SIZE: " +
+        (selectedFiles.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024)
+        .toFixed(2) + " MB" +
+        "\n> UI DEMO ONLY: TRANSFER SERVER NOT CONNECTED";
+}
+
+function cancelTransfer() {
+    selectedFiles = [];
+    document.getElementById("files").value = "";
+    document.getElementById("sendStatus").textContent =
+        "> SELECTION CANCELLED";
+}
+
+function openTransfer() {
+    const code = document.getElementById("shareCode")
+        .value.trim().toUpperCase();
+
+    const status = document.getElementById("receiveStatus");
+
+    if (!/^DJ[A-Z0-9]{3}$/.test(code)) {
+        status.textContent = "> ENTER A CODE LIKE DJ729";
+        return;
+    }
+
+    status.textContent =
+        "> CODE FORMAT VALID\n" +
+        "> ONLINE SERVER NOT CONNECTED\n" +
+        "> THIS CODE CANNOT YET RETRIEVE FILES";
+}
+</script>
+
+</body>
+  </html>

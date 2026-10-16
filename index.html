@@ -2,229 +2,170 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DJShare | Secure File Transfer</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#050807;color:#00ff88;
+ font-family:monospace;min-height:100vh
 }
-
-body {
-    background: #050807;
-    color: #00ff88;
-    font-family: monospace;
-    min-height: 100vh;
+header{
+ text-align:center;padding:25px 10px;
+ border-bottom:1px solid #00ff88;
+ text-shadow:0 0 12px #00ff88
 }
-
-header {
-    padding: 22px 15px;
-    text-align: center;
-    border-bottom: 1px solid #00ff8855;
-    box-shadow: 0 0 20px #00ff8815;
+h1{font-size:34px;letter-spacing:3px}
+main{max-width:480px;width:92%;margin:30px auto}
+.panel{
+ background:#09110e;border:1px solid #00ff8870;
+ border-radius:12px;padding:22px;margin-bottom:22px
 }
-
-.logo {
-    font-size: 32px;
-    font-weight: bold;
-    letter-spacing: 3px;
-    text-shadow: 0 0 15px #00ff88;
+h2{font-size:18px}
+input,button{
+ width:100%;padding:13px;margin-top:12px;
+ border-radius:6px;font-family:monospace
 }
-
-.subtitle {
-    color: #8aaca0;
-    font-size: 12px;
-    margin-top: 8px;
+input{
+ background:#030605;color:#00ff88;
+ border:1px solid #286044
 }
-
-main {
-    width: 92%;
-    max-width: 500px;
-    margin: 35px auto;
+button{
+ background:#00ff88;color:#001b0e;
+ border:0;font-weight:bold;cursor:pointer
 }
-
-.panel {
-    border: 1px solid #00ff8860;
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 20px;
-    background: #09110e;
-    box-shadow: 0 0 20px #00ff880b;
+.cancel{
+ background:transparent;color:#00ff88;
+ border:1px solid #00ff88
 }
-
-h2 {
-    font-size: 17px;
-    margin-bottom: 18px;
+.status{
+ margin-top:15px;line-height:1.8;
+ font-size:13px;overflow-wrap:anywhere
 }
-
-label {
-    display: block;
-    margin-bottom: 12px;
-    color: #a4c9b7;
-}
-
-input[type="file"],
-input[type="text"] {
-    width: 100%;
-    padding: 13px;
-    background: #030605;
-    border: 1px solid #245c43;
-    border-radius: 6px;
-    color: #00ff88;
-    margin-bottom: 15px;
-}
-
-button {
-    width: 100%;
-    padding: 14px;
-    background: #00ff88;
-    color: #001b0e;
-    font-weight: bold;
-    font-family: monospace;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 8px;
-}
-
-button:hover {
-    box-shadow: 0 0 18px #00ff8870;
-}
-
-.secondary {
-    background: transparent;
-    color: #00ff88;
-    border: 1px solid #00ff88;
-}
-
-.status {
-    margin-top: 15px;
-    font-size: 12px;
-    color: #a4c9b7;
-    overflow-wrap: anywhere;
-    line-height: 1.8;
-}
-
-.code {
-    font-size: 32px;
-    text-align: center;
-    letter-spacing: 5px;
-    padding: 18px 0;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 0 15px #00ff88;
-}
-
-footer {
-    text-align: center;
-    padding: 25px 10px;
-    color: #527463;
-    font-size: 11px;
-}
+a{color:#00ff88}
+footer{text-align:center;padding:20px;color:#527463}
 </style>
 </head>
 
 <body>
-
 <header>
-    <div class="logo">DJ<span style="color:white">SHARE</span></div>
-    <div class="subtitle">SECURE FILE TRANSFER // NEXT GENERATION</div>
+ <h1>DJ<span style="color:white">SHARE</span></h1>
+ <p>SECURE FILE TRANSFER // SHARE ANYTHING</p>
 </header>
 
 <main>
+ <section class="panel">
+  <h2>&gt; SEND FILES</h2>
+  <p>Select files to share with another device.</p>
 
-    <section class="panel">
-        <h2>&gt; SEND FILES</h2>
+  <input type="file" id="files" multiple>
 
-        <label for="files">SELECT FILES TO TRANSFER</label>
-        <input type="file" id="files" multiple>
+  <button id="sendBtn" onclick="sendFiles()">SEND FILES</button>
+  <button class="cancel" onclick="cancelSend()">CANCEL</button>
 
-        <button onclick="prepareFiles()">INITIALIZE SEND</button>
-        <button class="secondary" onclick="cancelTransfer()">CANCEL</button>
+  <div class="status" id="sendStatus">
+   &gt; WAITING FOR FILES
+  </div>
+ </section>
 
-        <div id="sendStatus" class="status">
-            &gt; SYSTEM READY<br>
-            &gt; WAITING FOR FILE SELECTION
-        </div>
-    </section>
+ <section class="panel">
+  <h2>&gt; RECEIVE FILES</h2>
+  <p>Enter the code shared by the sender.</p>
 
-    <section class="panel">
-        <h2>&gt; RECEIVE FILES</h2>
+  <input id="code" placeholder="Example: DJ729"
+         maxlength="5" autocomplete="off">
 
-        <label for="shareCode">ENTER YOUR DJSHARE CODE</label>
-        <input type="text" id="shareCode" placeholder="Example: DJ729"
-               maxlength="5" autocomplete="off">
+  <button onclick="receiveFiles()">CONNECT</button>
 
-        <button onclick="openTransfer()">CONNECT</button>
-
-        <div id="receiveStatus" class="status">
-            &gt; WAITING FOR CONNECTION CODE
-        </div>
-    </section>
-
-    <section class="panel">
-        <h2>&gt; CONNECTION STATUS</h2>
-        <div class="status" id="systemStatus">
-            &gt; DJSHARE INITIALIZED<br>
-            &gt; TRANSFER SERVER NOT CONNECTED<br>
-            &gt; READY FOR SETUP
-        </div>
-    </section>
-
+  <div class="status" id="receiveStatus">
+   &gt; WAITING FOR CODE
+  </div>
+ </section>
 </main>
 
-<footer>
-    DJSHARE // SHARE ANYTHING. ANYWHERE.
-</footer>
+<footer>DJSHARE // YOUR FILES, YOUR CONTROL</footer>
 
 <script>
-let selectedFiles = [];
+let controller = null;
 
-function prepareFiles() {
-    const input = document.getElementById("files");
-    const status = document.getElementById("sendStatus");
+async function sendFiles(){
+ const input = document.getElementById("files");
+ const status = document.getElementById("sendStatus");
+ const btn = document.getElementById("sendBtn");
 
-    if (!input.files.length) {
-        status.textContent = "> ERROR: SELECT FILES FIRST";
-        return;
-    }
+ if(!input.files.length){
+  status.textContent = "> ERROR: SELECT FILES FIRST";
+  return;
+ }
 
-    selectedFiles = Array.from(input.files);
+ const form = new FormData();
+ for(const file of input.files){
+  form.append("files", file);
+ }
 
-    status.textContent =
-        "> FILES SELECTED: " + selectedFiles.length +
-        "\n> TOTAL SIZE: " +
-        (selectedFiles.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024)
-        .toFixed(2) + " MB" +
-        "\n> UI DEMO ONLY: TRANSFER SERVER NOT CONNECTED";
+ controller = new AbortController();
+ btn.disabled = true;
+ btn.textContent = "UPLOADING...";
+ status.textContent = "> UPLOADING FILES...";
+
+ try{
+  const response = await fetch("/api/send",{
+   method:"POST",
+   body:form,
+   signal:controller.signal
+  });
+
+  const result = await response.json();
+
+  if(!response.ok){
+   throw new Error(result.error || "Upload failed");
+  }
+
+  status.innerHTML =
+   "> FILES UPLOADED<br>" +
+   "> SHARE CODE: <strong>" + result.code + "</strong><br>" +
+   "> SEND THIS LINK TO RECEIVER:<br>" +
+   '<a href="' + result.link + '">' +
+   result.link + '</a><br>' +
+   "> CODE EXPIRES IN 10 MINUTES";
+
+ }catch(error){
+  if(error.name === "AbortError"){
+   status.textContent = "> TRANSFER CANCELLED";
+  }else{
+   status.textContent = "> ERROR: " + error.message;
+  }
+ }finally{
+  controller = null;
+  btn.disabled = false;
+  btn.textContent = "SEND FILES";
+ }
 }
 
-function cancelTransfer() {
-    selectedFiles = [];
-    document.getElementById("files").value = "";
-    document.getElementById("sendStatus").textContent =
-        "> SELECTION CANCELLED";
+function cancelSend(){
+ if(controller){
+  controller.abort();
+ }
+ document.getElementById("files").value = "";
+ document.getElementById("sendStatus").textContent =
+  "> SELECTION CLEARED";
 }
 
-function openTransfer() {
-    const code = document.getElementById("shareCode")
-        .value.trim().toUpperCase();
+function receiveFiles(){
+ const code = document.getElementById("code")
+  .value.trim().toUpperCase();
 
-    const status = document.getElementById("receiveStatus");
+ const status = document.getElementById("receiveStatus");
 
-    if (!/^DJ[A-Z0-9]{3}$/.test(code)) {
-        status.textContent = "> ENTER A CODE LIKE DJ729";
-        return;
-    }
+ if(!/^DJ[0-9]{3}$/.test(code)){
+  status.textContent = "> ENTER A CODE LIKE DJ729";
+  return;
+ }
 
-    status.textContent =
-        "> CODE FORMAT VALID\n" +
-        "> ONLINE SERVER NOT CONNECTED\n" +
-        "> THIS CODE CANNOT YET RETRIEVE FILES";
+ window.location.href =
+  "/receive?code=" + encodeURIComponent(code);
 }
 </script>
-
 </body>
-  </html>
+</html>
